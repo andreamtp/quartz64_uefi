@@ -35,55 +35,67 @@
 		};
 		atf-2 {
 				description = "ARM Trusted Firmware";
-				data = /incbin/("./bl31_0x00068000.bin");
+				data = /incbin/("./bl31_0x0005a000.bin");
 				type = "firmware";
 				arch = "arm64";
 				os = "arm-trusted-firmware";
 				compression = "none";
-				load = <0x00068000>;
+				load = <0x0005a000>;
 				hash {
 						algo = "sha256";
 				};
 		};
 		atf-3 {
-			description = "ARM Trusted Firmware";
-			data = /incbin/("./bl31_0xfdcd0000.bin");
-			type = "firmware";
-			arch = "arm64";
-			os = "arm-trusted-firmware";
-			compression = "none";
-			load = <0xfdcd0000>;
-			hash {
-				algo = "sha256";
-			};
+				description = "ARM Trusted Firmware";
+				data = /incbin/("./bl31_0x0005c000.bin");
+				type = "firmware";
+				arch = "arm64";
+				os = "arm-trusted-firmware";
+				compression = "none";
+				load = <0x0005c000>;
+				hash {
+						algo = "sha256";
+				};
 		};
 		atf-4 {
 			description = "ARM Trusted Firmware";
-			data = /incbin/("./bl31_0xfdcc9000.bin");
+			data = /incbin/("./bl31_0xfdcc1000.bin");
 			type = "firmware";
 			arch = "arm64";
 			os = "arm-trusted-firmware";
 			compression = "none";
-			load = <0xfdcc9000>;
+			load = <0xfdcc1000>;
 			hash {
 				algo = "sha256";
 			};
 		};
 		atf-5 {
+			description = "ARM Trusted Firmware";
+			data = /incbin/("./bl31_0xfdcce000.bin");
+			type = "firmware";
+			arch = "arm64";
+			os = "arm-trusted-firmware";
+			compression = "none";
+			load = <0xfdcce000>;
+			hash {
+				algo = "sha256";
+			};
+		};
+		atf-6 {
 				description = "ARM Trusted Firmware";
-				data = /incbin/("./bl31_0x00066000.bin");
+				data = /incbin/("./bl31_0xfdcd0000.bin");
 				type = "firmware";
 				arch = "arm64";
 				os = "arm-trusted-firmware";
 				compression = "none";
-				load = <0x00066000>;
+				load = <0xfdcd0000>;
 				hash {
 						algo = "sha256";
 				};
 		};
 		optee {
 			description = "OP-TEE";
-			data = /incbin/("./edk2-rockchip-non-osi/rkbin/bin/rk35/rk3568_bl32_v2.01.bin");
+			data = /incbin/("./edk2-rockchip-non-osi/rkbin/bin/rk35/rk3568_bl32_v2.15.bin");
 			type = "firmware";
 			arch = "arm64";
 			os = "op-tee";
@@ -112,7 +124,7 @@
 			description = "@BOARDTYPE@";
 			rollback-index = <0x0>;
 			firmware = "atf-1";
-			loadables = "uboot", "atf-2", "atf-3", "atf-4", "atf-5", "optee";
+			loadables = "uboot", "atf-2", "atf-3", "atf-4", "atf-5", "atf-6", "optee";
 			
 			fdt = "fdt";
 			signature {
