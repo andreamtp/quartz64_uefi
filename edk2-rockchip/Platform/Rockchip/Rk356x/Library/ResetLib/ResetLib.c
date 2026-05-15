@@ -17,7 +17,7 @@
 #include <Library/BaseLib.h>
 #include <Library/DebugLib.h>
 #include <Library/TimerLib.h>
-#include <Library/EfiResetSystemLib.h>
+#include <Library/ResetSystemLib.h>
 #include <Library/ArmSmcLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiLib.h>
@@ -85,6 +85,43 @@ LibResetSystem (
   DEBUG ((DEBUG_ERROR, "%a: PSCI Reset failed\n", __FUNCTION__));
   CpuDeadLoop ();
   return EFI_UNSUPPORTED;
+}
+
+VOID
+EFIAPI
+ResetCold (
+  VOID
+  )
+{
+  LibResetSystem (EfiResetCold, EFI_SUCCESS, 0, NULL);
+}
+
+VOID
+EFIAPI
+ResetWarm (
+  VOID
+  )
+{
+  LibResetSystem (EfiResetWarm, EFI_SUCCESS, 0, NULL);
+}
+
+VOID
+EFIAPI
+ResetShutdown (
+  VOID
+  )
+{
+  LibResetSystem (EfiResetShutdown, EFI_SUCCESS, 0, NULL);
+}
+
+VOID
+EFIAPI
+ResetPlatformSpecific (
+  IN UINTN  DataSize,
+  IN VOID   *ResetData
+  )
+{
+  ResetCold ();
 }
 
 /**

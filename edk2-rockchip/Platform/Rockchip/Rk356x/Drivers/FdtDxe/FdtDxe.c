@@ -10,14 +10,15 @@
 #include <PiDxe.h>
 
 #include <Library/BaseLib.h>
+#include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
-#include <Library/PrintLib.h>
 #include <Library/DxeServicesLib.h>
+#include <Library/FdtLib.h>
 #include <Library/MemoryAllocationLib.h>
+#include <Library/PrintLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiLib.h>
 #include <IndustryStandard/Rk356x.h>
-#include <libfdt.h>
 #include <Guid/Fdt.h>
 #include <ConfigVars.h>
 
@@ -32,7 +33,7 @@ CleanMemoryNodes (
   INTN Node;
   INT32 Retval;
 
-  Node = fdt_path_offset (mFdtImage, "/memory");
+  Node = FdtPathOffset (mFdtImage, "/memory");
   if (Node < 0) {
     return EFI_SUCCESS;
   }
@@ -42,7 +43,7 @@ CleanMemoryNodes (
    * OS go crazy and ignore the UEFI map.
    */
   DEBUG ((DEBUG_INFO, "Removing bogus /memory\n"));
-  Retval = fdt_del_node (mFdtImage, Node);
+  Retval = FdtDelNode (mFdtImage, Node);
   if (Retval != 0) {
     DEBUG ((DEBUG_ERROR, "Failed to remove /memory\n"));
     return EFI_NOT_FOUND;
@@ -62,12 +63,12 @@ FixUartSpeed (
   char Buf[80];
   UINT8 UartIndex;
 
-  Node = fdt_path_offset (mFdtImage, "/chosen");
+  Node = FdtPathOffset (mFdtImage, "/chosen");
   if (Node < 0) {
     return EFI_SUCCESS;
   }
 
-  StdOutPath = fdt_getprop (mFdtImage, Node, "stdout-path", NULL);
+  StdOutPath = FdtGetProp (mFdtImage, Node, "stdout-path", NULL);
   if (StdOutPath == NULL) {
     return EFI_SUCCESS;
   }
@@ -78,7 +79,7 @@ FixUartSpeed (
     UartIndex = 1 + (FixedPcdGet64 (PcdSerialRegisterBase) - UART_BASE (1)) / 0x10000;
   }
   AsciiSPrint (Buf, sizeof (Buf), "serial%u:%lun8", UartIndex, FixedPcdGet64 (PcdUartDefaultBaudRate));
-  fdt_setprop_string (mFdtImage, Node, "stdout-path", Buf);
+  FdtSetPropString (mFdtImage, Node, "stdout-path", Buf);
 
   return EFI_SUCCESS;
 }
@@ -92,21 +93,21 @@ FixMultiPhy1Mode (
 {
   INTN Node;
 
-  Node = fdt_path_offset (mFdtImage, "/sata@fc400000");
+  Node = FdtPathOffset (mFdtImage, "/sata@fc400000");
   if (Node < 0) {
     DEBUG ((DEBUG_ERROR, "Node /sata@fc400000 not found"));
     return EFI_SUCCESS;
   }
-  fdt_setprop_string (mFdtImage, Node, "status",
-                      PcdGet32 (PcdMultiPhy1Mode) == MULTIPHY_MODE_SEL_SATA ? "okay" : "disabled");
+  FdtSetPropString (mFdtImage, Node, "status",
+                    PcdGet32 (PcdMultiPhy1Mode) == MULTIPHY_MODE_SEL_SATA ? "okay" : "disabled");
 
-  Node = fdt_path_offset (mFdtImage, "/usb@fd000000");
+  Node = FdtPathOffset (mFdtImage, "/usb@fd000000");
   if (Node < 0) {
     DEBUG ((DEBUG_ERROR, "Node /usb@fd000000 not found"));
     return EFI_SUCCESS;
   }
-  fdt_setprop_string (mFdtImage, Node, "status",
-                      PcdGet32 (PcdMultiPhy1Mode) == MULTIPHY_MODE_SEL_USB3 ? "okay" : "disabled");
+  FdtSetPropString (mFdtImage, Node, "status",
+                    PcdGet32 (PcdMultiPhy1Mode) == MULTIPHY_MODE_SEL_USB3 ? "okay" : "disabled");
 
   return EFI_SUCCESS;
 }
@@ -143,13 +144,13 @@ FdtDxeInitialize (
   }
 
   FdtImage = (VOID*)(UINTN)PcdGet64 (PcdFdtBaseAddress);
-  Retval = fdt_check_header (FdtImage);
+  Retval = FdtCheckHeader (FdtImage);
   if (Retval != 0) {
     DEBUG ((DEBUG_ERROR, "No devicetree passed from loader.\n"));
     return EFI_NOT_FOUND;
   }
 
-  FdtSize = fdt_totalsize (FdtImage);
+  FdtSize = FdtTotalSize (FdtImage);
 
   /*
    * Probably overkill.
@@ -162,9 +163,9 @@ FdtDxeInitialize (
     goto out;
   }
 
-  Retval = fdt_open_into (FdtImage, mFdtImage, FdtSize);
+  Retval = FdtOpenInto (FdtImage, mFdtImage, FdtSize);
   if (Retval != 0) {
-     DEBUG ((DEBUG_ERROR, "fdt_open_into failed: %d\n", Retval));
+     DEBUG ((DEBUG_ERROR, "FdtOpenInto failed: %d\n", Retval));
      goto out;
   }
 

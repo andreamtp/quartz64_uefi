@@ -58,6 +58,7 @@ InstallProtocolInterfaces (
                     &FvbDevice->FwVolBlockInstance,
                     &gEfiDevicePathProtocolGuid,
                     FvbDevice->DevicePath,
+                    &gEdkiiNvVarStoreFormattedGuid,
                     NULL
                   );
     ASSERT_EFI_ERROR (Status);

@@ -26,6 +26,7 @@
 [Packages]
   ArmPkg/ArmPkg.dec
   MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
   EmbeddedPkg/EmbeddedPkg.dec
   Platform/Rockchip/Rk356x/Rk356x.dec
   Silicon/Rockchip/Rk356x/Rk356x.dec
