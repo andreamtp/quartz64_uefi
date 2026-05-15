@@ -10,7 +10,7 @@ RKUEFIBOARDS=${1}
 shift
 
 export WORKSPACE="$PWD"
-export PACKAGES_PATH=$PWD/edk2:$PWD/edk2-platforms:$PWD/edk2-non-osi:$PWD/edk2-rockchip
+export PACKAGES_PATH=$PWD/edk2:$PWD/edk2-rockchip
 export GCC5_AARCH64_PREFIX=aarch64-linux-gnu-
 
 TRUST_INI=RK3568TRUST.ini
