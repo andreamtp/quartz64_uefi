@@ -58,6 +58,7 @@ build_idblock() {
 	echo " => Calling boot_merger unpack"
 	./${RKBIN}/tools/boot_merger unpack -i ${RKBIN}/rk356x_spl_loader_*.bin -o .
 	cat ${FLASHFILES} > idblock.bin
+	git restore ${RKBIN}/${DDR}
 
 	# Cleanup
 	rm -f ${RKBIN}/rk356x_spl_loader_*.bin
