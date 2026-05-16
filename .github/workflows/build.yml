@@ -27,7 +27,8 @@ jobs:
             gcc-aarch64-linux-gnu \
             iasl \
             device-tree-compiler \
-            python3-pyelftools
+            python3-pyelftools \
+            uuid-dev
 
       - name: Build
         run: |
