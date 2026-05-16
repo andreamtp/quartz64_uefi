@@ -5,76 +5,43 @@ on:
     tags:
       - '*'
 
+permissions:
+  contents: write  # Required to create releases and upload assets
+
 jobs:
   build_release:
-    name: build_release
-    runs-on: ubuntu-20.04
+    name: Build and Release
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Install toolchain
         run: |
-          sudo apt update
-          sudo apt --fix-missing install gcc-aarch64-linux-gnu iasl device-tree-compiler python3-pyelftools
-      - name: version
-        run: echo "::set-output name=version::$(echo $GITHUB_REF | cut -d / -f 3)"
-        id: version
-      - name: build artifact
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gcc-aarch64-linux-gnu \
+            iasl \
+            device-tree-compiler \
+            python3-pyelftools
+
+      - name: Build release artifacts
         run: make release
-      - name: release
-        uses: actions/create-release@v1
-        id: create_release
+
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2
         with:
-          draft: false
-          prerelease: false
-          release_name: ${{ steps.version.outputs.version }}
+          name: ${{ github.ref_name }}
           tag_name: ${{ github.ref }}
           body_path: CHANGELOG.md
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-      - name: upload QUARTZ64_EFI artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./QUARTZ64_EFI.img.gz
-          asset_name: QUARTZ64_EFI.img.gz
-          asset_content_type: application/gzip
-      - name: upload SOQUARTZ_EFI artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./SOQUARTZ_EFI.img.gz
-          asset_name: SOQUARTZ_EFI.img.gz
-          asset_content_type: application/gzip
-      - name: upload PINETAB2_EFI artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./PINETAB2_EFI.img.gz
-          asset_name: PINETAB2_EFI.img.gz
-          asset_content_type: application/gzip
-      - name: upload ROC-RK3566-PC_EFI artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./ROC-RK3566-PC_EFI.img.gz
-          asset_name: ROC-RK3566-PC_EFI.img.gz
-          asset_content_type: application/gzip
-      - name: upload ROC-RK3568-PC_EFI artifact
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./ROC-RK3568-PC_EFI.img.gz
-          asset_name: ROC-RK3568-PC_EFI.img.gz
-          asset_content_type: application/gzip
+          draft: false
+          prerelease: false
+          files: |
+            ./QUARTZ64_EFI.img.gz
+            ./SOQUARTZ_EFI.img.gz
+            ./PINETAB2_EFI.img.gz
+            ./ROC-RK3566-PC_EFI.img.gz
+            ./ROC-RK3568-PC_EFI.img.gz
