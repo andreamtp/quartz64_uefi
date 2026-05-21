@@ -302,11 +302,16 @@ SendCommand (
   UINT32      Data, ErrMask;
   EFI_STATUS  Status = EFI_SUCCESS;
 
+  // Not entirely sure why this is needed, but it helps at least one uSD card in my
+  // collection avoid the problem described in the issue described at
+  // https://github.com/jaredmcneill/quartz64_uefi/issues/83
+  MicroSecondDelay (100);
+  
   // Wait until MMC is idle
   do {
     Data = MmioRead32 (DWEMMC_STATUS);
   } while (Data & DWEMMC_STS_DATA_BUSY);
-
+  
   MmioWrite32 (DWEMMC_RINTSTS, ~0);
   MmioWrite32 (DWEMMC_CMDARG, Argument);
   MmioWrite32 (DWEMMC_CMD, MmcCmd);
