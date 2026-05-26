@@ -19,7 +19,6 @@ DefinitionBlock ("DsdtTable.aml", "DSDT",
     include ("Wdt.asl")
     include ("Usb2.asl")
     include ("Usb3.asl")
-    include ("Gmac.asl")
     include ("Mshc.asl")
     include ("Emmc.asl")
     include ("Pcie2x1.asl")

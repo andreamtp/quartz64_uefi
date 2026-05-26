@@ -58,9 +58,10 @@
   gRk356xTokenSpaceGuid.PcdXhc1Status|0xF
 
   #
-  # Ethernet support
+  # Ethernet: use devicetree gmac1 (dwmac-rk), not ACPI PRP0001 (stmmaceth).
   #
-  gRk356xTokenSpaceGuid.PcdMac1Status|0xF
+  gRk356xTokenSpaceGuid.PcdMac0Status|0
+  gRk356xTokenSpaceGuid.PcdMac1Status|0
 
   #
   # PCI support
@@ -97,8 +98,8 @@
 
 [PcdsDynamicHii.common.DEFAULT]
   #
-  # ConfigDxe
+  # ConfigDxe: ACPI+DT so FdtDxe publishes rk3566-roc-pc.dtb for gmac1.
   #
-  gRk356xTokenSpaceGuid.PcdSystemTableMode|L"SystemTableMode"|gConfigDxeFormSetGuid|0x0|0
+  gRk356xTokenSpaceGuid.PcdSystemTableMode|L"SystemTableMode"|gConfigDxeFormSetGuid|0x0|1
   gRk356xTokenSpaceGuid.PcdCpuClock|L"CpuClock"|gConfigDxeFormSetGuid|0x0|2
   gRk356xTokenSpaceGuid.PcdCustomCpuClock|L"CustomCpuClock"|gConfigDxeFormSetGuid|0x0|816
